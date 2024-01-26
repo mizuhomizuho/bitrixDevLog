@@ -2,23 +2,6 @@
 
 namespace Ms\General\Site\Log;
 
-/**
- * Примеры:
- *
-//    $devLog = (new \Ms\General\Site\Log\Dev())
-//        ->setLogFile(__FILE__) // Получается '/local/logs/' . $logFile . '.log'
-//        ->setMaxLive('1 month') // Хранить сообщения в логе не старше 1 месяца
-//        ->add(
-//            [
-//                'test' => 'xxx',
-//            ],
-//            // 'evgeny.babyuk@mi-shop.com', // Частота оповещений по умолчанию 1 раз в день
-//        );
-//
-//    $logFile = $devLog->getLogFile();
-//    $maxLive = $devLog->getMaxLive();
- */
-
 class Dev {
 
     private string $logFile;
