@@ -2,6 +2,8 @@
 
 namespace Ms\General\Site\Log;
 
+use Bitrix\Main\Type\DateTime;
+
 class Dev {
 
     private string $logFile;
@@ -118,9 +120,9 @@ class Dev {
 
         $microtime = microtime(true);
 
-        $nowTime = new \Bitrix\Main\Type\DateTime();
+        $nowTime = new DateTime();
 
-        $maxLiveTime = new \Bitrix\Main\Type\DateTime();
+        $maxLiveTime = new DateTime();
         $maxLiveTime->add('-' . $this->getMaxLive());
 
         if ($emailTo) {
