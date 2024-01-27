@@ -59,6 +59,13 @@ class Dev {
         return $this->emailTimeout ;
     }
 
+    static function getDebugBacktracePrint(): string {
+
+        ob_start();
+        debug_print_backtrace();
+        return (string) ob_get_clean();
+    }
+
     function setLogFile(
 
         string $logFile = __FILE__,

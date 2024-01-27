@@ -21,7 +21,7 @@
         'userId' => \Bitrix\Main\Engine\CurrentUser::get()->getId(),
         '$request' => $request,
         '$_SERVER' => $_SERVER,
-        'debug_backtrace' => debug_backtrace(),
+        'debug_backtrace' => \Ms\General\Site\Log\Dev::getDebugBacktracePrint(),
     ],
     'your@email.meow',
 );
