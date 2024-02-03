@@ -59,11 +59,13 @@ class Dev {
         return $this->emailTimeout ;
     }
 
-    static function getDebugBacktracePrint(): string {
+    static function getDebugBacktracePrint(): array {
 
         ob_start();
         debug_print_backtrace();
-        return (string) ob_get_clean();
+        $res = (array) preg_split('/\n/', (string) ob_get_clean());
+        unset($res[count($res)-1]);
+        return $res;
     }
 
     function setLogFile(
@@ -197,7 +199,15 @@ class Dev {
         if (file_exists($logFile)) {
 
             $arr = [];
-            eval(file_get_contents($logFile));
+
+            try {
+
+                eval(file_get_contents($logFile));
+
+            } catch (\ParseError $e) {
+
+                rename($logFile, $logFile . '.syntaxError' . $microtime . '.log');
+            }
 
             foreach ($arr as $msgMicrotime => $arrVal) {
                 foreach ($arrVal as $msgKey => $msgVar) {
