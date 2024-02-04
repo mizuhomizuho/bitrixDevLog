@@ -165,9 +165,11 @@ class Dev {
 
                 $sendedAgentParams = null;
 
-                eval(
-                    '$sendedAgentParams = ' . explode($agentFunc, $sendedAgent['NAME'])[1]
-                );
+                try {
+                    eval(
+                        '$sendedAgentParams = ' . explode($agentFunc, $sendedAgent['NAME'])[1]
+                    );
+                } catch (\ParseError $e) {}
 
                 if ($sendedAgentParams['status'] !== static::AGENT_SEND) {
 
@@ -178,75 +180,26 @@ class Dev {
             }
         }
 
-        $logArr = [];
-
-        $getLogStrFns = function (array $logVar, float $microtime): string {
-            return '$arr[\'' . $microtime . '\'][] = '
-                . var_export($logVar, true)
-                . ";\n";
-        };
-
-        $varJson = json_encode(
-
-            $var,
-
-            JSON_UNESCAPED_UNICODE
-            |JSON_UNESCAPED_SLASHES
-            |JSON_PRETTY_PRINT
-        );
-        $varHash = md5($varJson);
-
-        if (file_exists($logFile)) {
-
-            $arr = [];
-
-            try {
-
-                eval(file_get_contents($logFile));
-
-            } catch (\ParseError $e) {
-
-                rename($logFile, $logFile . '.syntaxError' . $microtime . '.log');
-            }
-
-            foreach ($arr as $msgMicrotime => $arrVal) {
-                foreach ($arrVal as $msgKey => $msgVar) {
-                    if ((float) $msgMicrotime > $maxLiveTime->getTimestamp()) {
-
-                        if ($varHash === $msgVar['hash']) {
-                            unset($msgVar['var']);
-                        }
-
-                        $logArr[$msgMicrotime][] = $getLogStrFns($msgVar, $msgMicrotime);
-                    }
-                }
-            }
-        }
-        else {
+        if (!file_exists($logFile)) {
             $logDir = dirname($logFile);
             if (!file_exists($logDir)) {
                 mkdir($logDir, 0777, true);
             }
         }
 
-        $logArr[(string) $microtime][] = $getLogStrFns([
-            'time' => $nowTime->format('Y-m-d H:i:s'),
-            'hash' => $varHash,
-            'var' => $varJson,
-        ], $microtime);
-
-        krsort($logArr);
-
-        $res = [];
-        foreach ($logArr as $logArrVal) {
-            foreach ($logArrVal as $msgVar) {
-                $res[] = $msgVar;
-            }
-        }
-
         file_put_contents(
             $logFile,
-            implode('//' . str_repeat('*', 88) . "\n", $res)
+            '//' . str_repeat('*', 88) . "\n" . '$arr[\'' . $microtime . '\'][] = '
+            . var_export([
+                'time' => $nowTime->format('Y-m-d H:i:s'),
+                'var' => json_encode($var,
+                    JSON_UNESCAPED_UNICODE
+                    |JSON_UNESCAPED_SLASHES
+                    |JSON_PRETTY_PRINT
+                ),
+            ], true)
+            . ";\n",
+            FILE_APPEND
         );
 
         return $this;
