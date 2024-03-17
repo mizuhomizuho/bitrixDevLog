@@ -1,11 +1,9 @@
 # bitrixDevLog
 
-Для отладки кода использую вот такой класс.
-Ставлю его на возможные ошибки и в случае
-срабатывания происходит запись в лог и отправка
-сообщения на почту (с таймаутом, так что сообщениями
-не завали). Еще их удобно подключать inclue`ом для
-анализа. Складывает он все в папку local/logs.
+To debug code I use this class. I set it up for
+possible errors and if it is triggered, it is 
+written to the log and a message is sent by email
+(with a timeout, so it’s not flooded with messages). It is also convenient to connect them inclue for analysis. It puts everything in the local/logs folder.
 
 ```php
 (new \Ms\General\Site\Log\Dev(
@@ -23,17 +21,17 @@
 );
 ```
 
-Вот еще пример:
+Here's another example:
 
 ```php
 $devLog = (new \Ms\General\Site\Log\Dev())
-    ->setLogFile(__FILE__) // Получается '/local/logs/' . $logFile . '.log'
-    ->setMaxLive('1 month') // Хранить сообщения в логе не старше 1 месяца
+    ->setLogFile(__FILE__) // It turns out '/local/logs/' . $logFile . '.log'
+    ->setMaxLive('1 month') // Store messages in the log no older than 1 month
     ->add(
         [
             'test' => 'xxx',
         ],
-        // 'your@email.meow', // Частота оповещений по умолчанию 1 раз в день
+        // 'your@email.meow', // Default alert frequency is once a day
     );
 
 $logFile = $devLog->getLogFile();
