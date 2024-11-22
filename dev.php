@@ -7,7 +7,6 @@ use Bitrix\Main\Type\DateTime;
 class Dev {
 
     private string $logFile;
-    private string $maxLive;
     private int $emailTimeout;
 
     const MAX_LIVE = '3 months';
@@ -18,29 +17,11 @@ class Dev {
     function __construct(
 
         string $logFile = __FILE__,
-        string $maxLive = self::MAX_LIVE,
         string $emailTimeout = self::EMAIL_TIMEOUT,
 
     ) {
         $this->setLogFile($logFile);
-        $this->setMaxLive($maxLive);
         $this->setEmailTimeout($emailTimeout);
-    }
-
-    function setMaxLive(
-
-        string $maxLive,
-
-    ): self {
-
-        $this->maxLive = $maxLive;
-
-        return $this;
-    }
-
-    function getMaxLive(): string {
-
-        return $this->maxLive;
     }
 
     function setEmailTimeout(
@@ -130,9 +111,6 @@ class Dev {
         $microtime = microtime(true);
 
         $nowTime = new DateTime();
-
-        $maxLiveTime = new DateTime();
-        $maxLiveTime->add('-' . $this->getMaxLive());
 
         if ($emailTo) {
 
