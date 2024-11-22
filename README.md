@@ -26,14 +26,10 @@ Here's another example:
 ```php
 $devLog = (new \Ms\General\Site\Log\Dev())
     ->setLogFile(__FILE__) // It turns out '/local/logs/' . $logFile . '.log'
-    ->setMaxLive('1 month') // Store messages in the log no older than 1 month
     ->add(
         [
             'test' => 'xxx',
         ],
         // 'your@email.meow', // Default alert frequency is once a day
     );
-
-$logFile = $devLog->getLogFile();
-$maxLive = $devLog->getMaxLive();
 ```
